@@ -1,0 +1,1 @@
+saya mengikuti bootcamp Nodejs Adonis di sanbercode ini untuk belajar bagaimana cara membuat aplikasi backend dengan menggunakan nodejs dengan baik dan agar suatu hari nanti dapat menjadi backend developer expert
