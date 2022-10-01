@@ -1,12 +1,13 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Database from '@ioc:Adonis/Lucid/Database'
-import VenueValidator from 'App/Validators/VenueValidator'
+import FieldValidator from 'App/Validators/FieldValidator'
 
-export default class VenuesController {
-  public async index({response}: HttpContextContract) {
+export default class FieldsController {
+  public async index({response, params}: HttpContextContract) {
     try {
       const data = await Database
-        .from('venues')
+        .from('fields')
+        .where('venue_id', params.venue_id)
         .select('*')
 
       response.ok({
@@ -20,16 +21,16 @@ export default class VenuesController {
     }
   }
 
-  public async store({response, request}: HttpContextContract) {
+  public async store({response, request, params}: HttpContextContract) {
     try {
-      await request.validate(VenueValidator)
+      await request.validate(FieldValidator)
 
       await Database
-      .table('venues')
+      .table('fields')
       .insert({
         name: request.input('name'),
-        address: request.input('address'),
-        phone:  request.input('phone')
+        type: request.input('type'),
+        venue_id: params.venue_id
       })
       response.created({
         message: "Success simpan data"
@@ -44,8 +45,9 @@ export default class VenuesController {
   public async show({response, params}: HttpContextContract) {
     try {
       const data = await Database
-        .from('venues')
+        .from('fields')
         .where('id', params.id)
+        .where('venue_id', params.venue_id)
         .first()
       
         response.ok({
@@ -61,14 +63,14 @@ export default class VenuesController {
 
   public async update({response, request, params}: HttpContextContract) {
     try {
-      await request.validate(VenueValidator)
+      await request.validate(FieldValidator)
       await Database
-        .from('venues')
+        .from('fields')
         .where('id', params.id)
         .update({
           name: request.input('name'),
-          address: request.input('address'),
-          phone:  request.input('phone')
+          type: request.input('type'),
+          venue_id:  params.venue_id
         })
       response.ok({
         message: "Success update data"
@@ -83,8 +85,9 @@ export default class VenuesController {
   public async destroy({response, params}: HttpContextContract) {
     try {
       await Database
-        .from('venues')
+        .from('fields')
         .where('id', params.id)
+        .where('venue_id', params.venue_id)
         .delete()
       response.ok({
         message: "Success delete data"

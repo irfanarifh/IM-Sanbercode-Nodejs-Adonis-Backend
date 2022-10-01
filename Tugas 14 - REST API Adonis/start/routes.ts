@@ -24,6 +24,8 @@ Route.get('/', async () => {
   return { hello: 'world' }
 })
 
-Route.post('/venues', 'VenuesController.store')
+// Route.post('/venues', 'VenuesController.store')
+// Route.post('/booking', 'BookingController.store')
 
-Route.post('/booking', 'BookingController.store')
+Route.resource('venues', 'VenuesController').apiOnly()
+Route.resource('venues.fields', 'FieldsController').apiOnly()

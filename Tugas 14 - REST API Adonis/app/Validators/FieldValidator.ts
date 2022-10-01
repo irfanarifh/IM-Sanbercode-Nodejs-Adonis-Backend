@@ -1,7 +1,7 @@
 import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class VenueValidator {
+export default class FieldValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -28,12 +28,9 @@ export default class VenueValidator {
       rules.alpha(),
       rules.minLength(5)
     ]),
-    address: schema.string({}, [
-      rules.minLength(10)
-    ]),
-    phone: schema.string([
-      rules.mobile()
-    ]),
+    type: schema.enum(
+      ['futsal', 'mini soccer', 'basketball']
+    )
   })
 
   /**
@@ -47,11 +44,11 @@ export default class VenueValidator {
    * }
    *
    */
-  public messages: CustomMessages = {
+   public messages: CustomMessages = {
     required: "inputan {{field}} tidak boleh kosong",
     "name.alpha": "inputan {{field}} hanya bisa berupa alphabet",
-    "address.minLength": "inputan {{field}} harus lebih dari 10",
     "name.minLength": "inputan {{field}} harus lebih dari 5",
-    "rule.phone": "inputan {{field}} harus berupa nomor telephone"
+    enum: 'inputan {{field}} harus salah satu dari {{ options.choices }}',
+    enumSet: 'inputan {{field}} harus salah satu dari {{ options.choices }}'
   }
 }
