@@ -4,9 +4,17 @@ import Database from '@ioc:Adonis/Lucid/Database'
 export default class GenresController {
   public async index({response}: HttpContextContract) {
     try {
-      const data = await Database
+      const  data = await Database
         .from('genres')
         .select('*')
+        
+      for (let i = 0; i < data.length; i++) {
+        const dataMovie = await Database
+          .from('movies')
+          .where('genres_id', data[i].id)
+          .select('movies.id', 'title', 'resume', 'release_date')
+        data[i].movies = dataMovie
+      }
 
       response.ok({
         message: "Succes mengambil data",
@@ -42,11 +50,17 @@ export default class GenresController {
         .from('genres')
         .where('id', params.id)
         .first()
+
+        const dataMovie = await Database
+          .from('movies')
+          .where('genres_id', data.id)
+          .select('movies.id', 'title', 'resume', 'release_date')
+        data.movies = dataMovie
       
-        response.ok({
-          message: "Success mengambil data",
-          data: data
-        })
+      response.ok({
+        message: "Success mengambil data",
+        data: data
+      })
     } catch (error) {
       response.badRequest({
         message: error.messages
